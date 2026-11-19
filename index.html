@@ -48,7 +48,6 @@
         linear-gradient(180deg, rgba(6, 14, 28, 0.94) 0%, rgba(6, 14, 28, 0.45) 50%, rgba(4, 9, 19, 0.96) 100%);
     }
 
-    /* Thanh trên cùng phong cách HUD MOBA */
     .hud-top {
       position: relative;
       z-index: 20;
@@ -148,7 +147,6 @@
       background: linear-gradient(180deg, rgba(14, 68, 106, 0.95), rgba(9, 36, 62, 0.95));
     }
 
-    /* Thanh chọn 50 tướng Chibi */
     .hero-strip-wrap {
       position: relative;
       z-index: 15;
@@ -247,7 +245,6 @@
       border-color: rgba(9, 17, 30, 0.35);
     }
 
-    /* Khu vực bản đồ chiến trường */
     .arena-stage {
       position: relative;
       flex: 1;
@@ -322,7 +319,6 @@
       text-align: right;
     }
 
-    /* Cụm điều khiển trái & phải kiểu MOBA */
     .controls-overlay {
       position: absolute;
       inset: 0;
@@ -459,7 +455,6 @@
       background: radial-gradient(circle at 35% 30%, #f43f5e, #9f1239 75%);
     }
 
-    /* Toast thông báo chiến thuật */
     .combat-toast {
       position: absolute;
       bottom: 14px;
@@ -478,7 +473,6 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     }
 
-    /* Modal hệ thống phong cách thẻ MOBA */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -664,7 +658,6 @@
 </head>
 <body>
   <div id="app">
-    <!-- HUD trên cùng kiểu Liên Quân -->
     <header class="hud-top">
       <div class="brand-block">
         <div class="brand-title">⚔️ ĐẠI CHIẾN MANGA CHIBI</div>
@@ -680,22 +673,20 @@
       </div>
     </header>
 
-    <!-- Thanh chọn 50 tướng Chibi -->
     <section class="hero-strip-wrap">
       <div class="active-hero-chip">
         <div class="chibi-avatar-box" id="activeHeroAvatar"></div>
         <div>
           <strong id="activeHeroName">1. Akame</strong>
-          <span id="activeHeroRole">Sát Thủ • Chibi</span>
+          <span id="activeHeroRole">Sát Thủ • Chibi 3D</span>
         </div>
       </div>
       <div class="hero-scroll" id="heroScrollList"></div>
     </section>
 
-    <!-- Bản đồ 3 đường kiểu LMHT & điều khiển MOBA -->
     <main class="arena-stage">
       <div class="target-hud">
-        <span class="t-name" id="targetName">🎯 Địch: Goku (Chibi)</span>
+        <span class="t-name" id="targetName">🎯 Địch: Goku (Chibi 3D)</span>
         <div class="hp-bar-track">
           <div class="hp-bar-fill" id="targetHpFill"></div>
         </div>
@@ -705,7 +696,6 @@
       <canvas id="mobaCanvas" width="1200" height="620"></canvas>
 
       <div class="controls-overlay">
-        <!-- Cụm phím di chuyển góc dưới bên trái -->
         <div class="dpad-cluster" aria-label="Điều khiển di chuyển">
           <div></div>
           <button class="dpad-btn" data-dir="up" aria-label="Lên">▲</button>
@@ -718,8 +708,1755 @@
           <div></div>
         </div>
 
-        <!-- Cụm kỹ năng & đòn đánh góc dưới bên phải -->
         <div class="skill-cluster" aria-label="Kỹ năng chiến đấu">
           <button class="skill-btn btn-s2" id="btnS2">
             <span>S2</span>
-            
+            <span class="cd-tag" id="cdS2">Sẵn</span>
+          </button>
+          <button class="skill-btn btn-ulti" id="btnUlti">
+            <span>ULTI</span>
+            <span class="cd-tag" id="cdUlti">Sẵn</span>
+          </button>
+          <button class="skill-btn btn-s1" id="btnS1">
+            <span>S1</span>
+            <span class="cd-tag" id="cdS1">Sẵn</span>
+          </button>
+          <button class="skill-btn btn-atk" id="btnAtk">
+            <span>ĐÁNH</span>
+            <span class="cd-tag">ATK</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="combat-toast" id="combatToast">Hiệu ứng Chém • Phi Tiêu S1 • Hồi Lực S2 • Bão Lửa ULTI • Rồng Hắc Ám &lt; 20% HP</div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="dragonModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>🐉 5 Rồng Nguyên Tố &amp; Bùa Rồng Hắc Ám</h2>
+        <button class="close-modal-btn" data-close="dragonModal">Đóng</button>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong style="color:#f5d0fe; font-size:13px;">Bùa Rồng Hắc Ám (Kết liễu &lt; 20% HP)</strong>
+          <div style="font-size:11px; color:#cbd5e1; margin-top:2px;">
+            Khi bật, đòn đánh hoặc kỹ năng gây sát thương tướng đích dưới 20% máu (hoặc kéo máu xuống dưới 20%) sẽ kết liễu ngay lập tức.
+          </div>
+        </div>
+        <button class="action-primary" id="btnToggleDarkBuff">Bật / Tắt Bùa</button>
+      </div>
+
+      <div class="dragon-grid" id="dragonGrid"></div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button class="action-primary" id="btnSlayRandomDragon">Hạ Rồng Nguyên Tố Ngẫu Nhiên</button>
+        <button class="hud-btn" id="btnResetDragonCycle">Đặt Lại Chu Kỳ Rồng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="rankModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>🏆 13 Bậc Đấu Hạng</h2>
+        <button class="close-modal-btn" data-close="rankModal">Đóng</button>
+      </div>
+
+      <p style="margin:0 0 12px; font-size:12px; color:#cbd5e1;">
+        Mỗi bậc lớn gồm 4 bậc nhỏ (Bậc 4 → Bậc 1), mỗi bậc nhỏ cần <strong>5 Sao</strong>. Dữ liệu lưu tự động qua <code>localStorage</code>.
+      </p>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+        <button class="action-primary" id="btnAddStar">+1 Sao</button>
+        <button class="hud-btn" id="btnSubStar">-1 Sao</button>
+        <button class="hud-btn" id="btnResetRank">Về Bậc 1 (Đồng IV ★0)</button>
+      </div>
+
+      <div class="rank-list" id="rankList"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="packModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>📦 Đóng Gói Ứng Dụng Android / iOS (Capacitor)</h2>
+        <button class="close-modal-btn" data-close="packModal">Đóng</button>
+      </div>
+      <p style="margin:0 0 10px; font-size:12px; color:#cbd5e1;">
+        App ID: <code>com.daichienmanga.moba</code> • Thư mục nguồn web: <code>www/</code>
+      </p>
+      <pre class="code-box">npm init -y
+npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/ios
+npx cap init "Đại Chiến Manga" "com.daichienmanga.moba" --web-dir=www
+npx cap add android
+npx cap add ios
+npx cap sync</pre>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEYS = {
+        hero: "dcm_selected_hero_v1",
+        rank: "dcm_rank_state_v1",
+        dragon: "dcm_dragon_state_v1"
+      };
+
+      const ROLES = ["Sát Thủ", "Đấu Sĩ", "Pháp Sư", "Xạ Thủ", "Đỡ Đòn", "Trợ Thủ"];
+      const RAW_HEROES = [
+        "Akame", "Goku", "Naruto", "Luffy", "Zoro", "Sasuke", "Gojo", "Sukuna", "Levi", "Tanjiro",
+        "Nezuko", "Killua", "Gon", "Hisoka", "Ichigo", "Aizen", "Saitama", "Genos", "Tatsumaki", "Garou",
+        "Meliodas", "Ban", "Escanor", "Natsu", "Erza", "Gray", "Jotaro", "Dio", "Edward", "Roy Mustang",
+        "Light Yagami", "Lelouch", "Mob", "Reigen", "Chainsaw Denji", "Makima", "Power", "Asta", "Yami", "Yuno",
+        "Sung Jin-Woo", "Cha Hae-In", "Rimuru", "Anos", "Cid Kagenou", "Alucard", "Kaneki", "Tohka", "Saber", "Gilgamesh"
+      ];
+
+      const CHARACTER_PROFILES = {
+        "Akame": { hair: "#0f172a", outfit: "#991b1b", archetype: "ribbon" },
+        "Goku": { hair: "#facc15", outfit: "#ea580c", archetype: "spiky" },
+        "Naruto": { hair: "#fbbf24", outfit: "#f97316", archetype: "headband" },
+        "Luffy": { hair: "#111827", outfit: "#dc2626", archetype: "strawhat" },
+        "Zoro": { hair: "#10b981", outfit: "#14532d", archetype: "bandana" },
+        "Sasuke": { hair: "#1e1b4b", outfit: "#334155", archetype: "spiky" },
+        "Gojo": { hair: "#f1f5f9", outfit: "#0f172a", archetype: "blindfold" },
+        "Sukuna": { hair: "#f472b6", outfit: "#4c0519", archetype: "horns" },
+        "Levi": { hair: "#1e293b", outfit: "#1e3a8a", archetype: "cravat" },
+        "Tanjiro": { hair: "#451a03", outfit: "#065f46", archetype: "earring" },
+        "Nezuko": { hair: "#111827", outfit: "#f472b6", archetype: "bamboo" },
+        "Killua": { hair: "#e2e8f0", outfit: "#1d4ed8", archetype: "spiky" },
+        "Gon": { hair: "#0f172a", outfit: "#16a34a", archetype: "spiky" },
+        "Hisoka": { hair: "#fb7185", outfit: "#f8fafc", archetype: "teardrop" },
+        "Ichigo": { hair: "#ea580c", outfit: "#111827", archetype: "spiky" },
+        "Aizen": { hair: "#78350f", outfit: "#f8fafc", archetype: "glasses" },
+        "Saitama": { hair: "#fde68a", outfit: "#facc15", archetype: "bald" },
+        "Genos": { hair: "#eab308", outfit: "#475569", archetype: "spiky" },
+        "Tatsumaki": { hair: "#34d399", outfit: "#0f172a", archetype: "twin" },
+        "Garou": { hair: "#cbd5e1", outfit: "#334155", archetype: "spiky" }
+      };
+
+      const FALLBACK_HAIR = ["#1e293b", "#f59e0b", "#38bdf8", "#a855f7", "#ef4444", "#22c55e"];
+      const FALLBACK_OUTFIT = ["#1d4ed8", "#b91c1c", "#0f766e", "#6d28d9", "#c2410c", "#374151"];
+      const FALLBACK_ARCH = ["spiky", "ribbon", "strawhat", "blindfold", "horns", "twin"];
+
+      const HEROES = RAW_HEROES.map((name, idx) => {
+        const custom = CHARACTER_PROFILES[name];
+        return {
+          id: idx + 1,
+          name,
+          role: ROLES[idx % ROLES.length],
+          atk: 115 + (idx % 7) * 14,
+          spd: 3.3 + (idx % 5) * 0.18,
+          hair: custom ? custom.hair : FALLBACK_HAIR[idx % FALLBACK_HAIR.length],
+          outfit: custom ? custom.outfit : FALLBACK_OUTFIT[idx % FALLBACK_OUTFIT.length],
+          archetype: custom ? custom.archetype : FALLBACK_ARCH[idx % FALLBACK_ARCH.length]
+        };
+      });
+
+      const ELEMENT_DRAGONS = [
+        { key: "fire", name: "Rồng Hỏa", buff: "+12% Sát thương kỹ năng & đòn đánh" },
+        { key: "water", name: "Rồng Thủy", buff: "+15% Hồi phục & kháng hiệu ứng" },
+        { key: "wind", name: "Rồng Phong", buff: "+14% Tốc chạy & tốc độ ra đòn" },
+        { key: "earth", name: "Rồng Thổ", buff: "+16% Giáp & Kháng phép" },
+        { key: "thunder", name: "Rồng Lôi", buff: "+15% Sát thương chuẩn lên mục tiêu" }
+      ];
+
+      const TIER_NAMES = [
+        "Đồng", "Bạc", "Vàng", "Bạch Kim", "Kim Cương", "Tinh Anh",
+        "Cao Thủ", "Đại Cao Thủ", "Thách Đấu", "Chiến Tướng",
+        "Huyền Thoại", "Thần Thoại", "Vô Song Manga"
+      ];
+
+      const ROMAN = ["IV", "III", "II", "I"];
+
+      function loadJSON(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? { ...fallback, ...JSON.parse(raw) } : { ...fallback };
+        } catch (_) {
+          return { ...fallback };
+        }
+      }
+
+      function saveJSON(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (_) {}
+      }
+
+      let selectedHeroId = Number(localStorage.getItem(STORAGE_KEYS.hero)) || 1;
+      if (!HEROES.some((h) => h.id === selectedHeroId)) selectedHeroId = 1;
+
+      let rankState = loadJSON(STORAGE_KEYS.rank, {
+        tierIdx: 0,
+        subIdx: 0,
+        stars: 0
+      });
+
+      let dragonState = loadJSON(STORAGE_KEYS.dragon, {
+        slainCount: 0,
+        slainElements: [],
+        darkBuffActive: false
+      });
+
+      const canvas = document.getElementById("mobaCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const LANE_PATHS = {
+        top: [[145, 515], [145, 95], [1055, 95]],
+        mid: [[185, 515], [600, 310], [1015, 105]],
+        bot: [[185, 525], [1055, 525], [1055, 105]]
+      };
+
+      function getPointAlongPolyline(points, t) {
+        const clamped = Math.max(0, Math.min(1, t));
+        const segLengths = [];
+        let totalLen = 0;
+        for (let i = 0; i < points.length - 1; i++) {
+          const dx = points[i + 1][0] - points[i][0];
+          const dy = points[i + 1][1] - points[i][1];
+          const len = Math.hypot(dx, dy);
+          segLengths.push(len);
+          totalLen += len;
+        }
+        let targetDist = clamped * totalLen;
+        for (let i = 0; i < segLengths.length; i++) {
+          if (targetDist <= segLengths[i] || i === segLengths.length - 1) {
+            const ratio = segLengths[i] > 0 ? targetDist / segLengths[i] : 0;
+            const x = points[i][0] + (points[i + 1][0] - points[i][0]) * ratio;
+            const y = points[i][1] + (points[i + 1][1] - points[i][1]) * ratio;
+            return { x, y };
+          }
+          targetDist -= segLengths[i];
+        }
+        return { x: points[0][0], y: points[0][1] };
+      }
+
+      const minions = [];
+      ["top", "mid", "bot"].forEach((lane) => {
+        for (let i = 0; i < 3; i++) {
+          minions.push({
+            side: "blue",
+            lane,
+            progress: -i * 0.055,
+            speed: 0.068
+          });
+          minions.push({
+            side: "red",
+            lane,
+            progress: 1 + i * 0.055,
+            speed: 0.068
+          });
+        }
+      });
+
+      const jungleMonsters = [
+        {
+          id: "blue_buff",
+          type: "blue_buff",
+          name: "Bùa Xanh",
+          x: 275,
+          y: 345,
+          hp: 900,
+          maxHp: 900,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "💧 Nhận Bùa Xanh: Hồi năng lượng & giảm hồi chiêu kỹ năng!"
+        },
+        {
+          id: "red_buff",
+          type: "red_buff",
+          name: "Bùa Đỏ",
+          x: 915,
+          y: 265,
+          hp: 900,
+          maxHp: 900,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "🔥 Nhận Bùa Đỏ: Đòn đánh tăng sát thương & thiêu đốt!"
+        },
+        {
+          id: "camp_top",
+          type: "jungle_creep",
+          name: "Quái Rừng",
+          x: 295,
+          y: 155,
+          hp: 550,
+          maxHp: 550,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "🐾 Hạ Quái Rừng: Nhận vàng & kinh nghiệm!"
+        },
+        {
+          id: "camp_bot",
+          type: "jungle_creep",
+          name: "Quái Rừng",
+          x: 895,
+          y: 455,
+          hp: 550,
+          maxHp: 550,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "🐾 Hạ Quái Rừng: Nhận vàng & kinh nghiệm!"
+        },
+        {
+          id: "dragon",
+          type: "dragon",
+          name: "Rồng",
+          x: 780,
+          y: 415,
+          hp: 1600,
+          maxHp: 1600,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "🐉 Hạ Rồng: Tiến thêm 1 Rồng Nguyên Tố!"
+        },
+        {
+          id: "overlord",
+          type: "overlord",
+          name: "Tà Thần",
+          x: 420,
+          y: 205,
+          hp: 2200,
+          maxHp: 2200,
+          respawnTimer: 0,
+          hitFlash: 0,
+          buffMsg: "👑 Hạ Tà Thần: Hiệu ứng Tà Thần càn quét 3 đường!"
+        }
+      ];
+
+      const player = {
+        x: 185,
+        y: 515,
+        facing: 1,
+        hp: 1200,
+        maxHp: 1200,
+        cdS1: 0,
+        cdS2: 0,
+        cdUlti: 0,
+        cdrMult: 1,
+        redBuffTimer: 0,
+        healAuraTimer: 0,
+        emote: "",
+        emoteTimer: 0
+      };
+
+      const enemy = {
+        name: "Goku",
+        x: 1015,
+        y: 105,
+        facing: -1,
+        hp: 1000,
+        maxHp: 1000,
+        hitFlash: 0,
+        respawnTimer: 0,
+        hair: "#facc15",
+        outfit: "#ea580c",
+        archetype: "spiky"
+      };
+
+      const moveDirs = { up: false, down: false, left: false, right: false };
+      const effects = [];
+      const projectiles = [];
+      const floatingTexts = [];
+      let screenShake = 0;
+
+      function getCurrentHero() {
+        return HEROES.find((h) => h.id === selectedHeroId) || HEROES[0];
+      }
+
+      function createChibiSvg(hero, size) {
+        let hairTop = `<path d="M8 13.5 C8 8.2 24 8.2 24 13.5 C22 10.5 10 10.5 8 13.5 Z" fill="${hero.hair}"/>`;
+        if (hero.archetype === "bald") {
+          hairTop = "";
+        } else if (hero.archetype === "twin") {
+          hairTop = `<circle cx="7.5" cy="12" r="4" fill="${hero.hair}"/><circle cx="24.5" cy="12" r="4" fill="${hero.hair}"/>${hairTop}`;
+        }
+
+        const extra =
+          hero.archetype === "ribbon"
+            ? `<circle cx="16" cy="5" r="3" fill="#f43f5e"/><path d="M16 5 L11 3 L12 8 Z" fill="#f43f5e"/>`
+            : hero.archetype === "strawhat"
+            ? `<ellipse cx="16" cy="8" rx="13" ry="3.2" fill="#facc15" stroke="#854d0e" stroke-width="1"/><path d="M9 8 C9 4 23 4 23 8 Z" fill="#fde047" stroke="#854d0e" stroke-width="1"/>`
+            : hero.archetype === "horns"
+            ? `<path d="M8 9 L5 4 L11 8 Z M24 9 L27 4 L21 8 Z" fill="#e11d48"/>`
+            : hero.archetype === "spiky"
+            ? `<path d="M8 9 L6 3 L12 7 L16 2 L20 7 L26 3 L24 9 Z" fill="${hero.hair}"/>`
+            : hero.archetype === "headband"
+            ? `<rect x="8.5" y="10.5" width="15" height="2.6" rx="1" fill="#1e293b"/><circle cx="16" cy="11.8" r="1.3" fill="#cbd5e1"/>`
+            : hero.archetype === "bandana"
+            ? `<rect x="9" y="10.5" width="14" height="2.5" rx="1" fill="#166534"/>`
+            : hero.archetype === "earring"
+            ? `<rect x="7.2" y="16" width="1.6" height="3.5" rx="0.6" fill="#ef4444"/>`
+            : hero.archetype === "bamboo"
+            ? `<rect x="12.5" y="17" width="7" height="2.4" rx="1.1" fill="#f472b6" stroke="#9d174d" stroke-width="0.8"/>`
+            : hero.archetype === "glasses"
+            ? `<rect x="10" y="13" width="5" height="3.2" rx="0.8" fill="none" stroke="#38bdf8" stroke-width="1"/><rect x="17" y="13" width="5" height="3.2" rx="0.8" fill="none" stroke="#38bdf8" stroke-width="1"/>`
+            : "";
+
+        const eyes =
+          hero.archetype === "blindfold"
+            ? `<rect x="10" y="13" width="12" height="3.2" rx="1.5" fill="#1e293b"/>`
+            : `<circle cx="12.5" cy="14.5" r="2" fill="#0f172a"/><circle cx="19.5" cy="14.5" r="2" fill="#0f172a"/><circle cx="12" cy="14" r="0.7" fill="#ffffff"/><circle cx="19" cy="14" r="0.7" fill="#ffffff"/>`;
+
+        return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 28 L10 21 L22 21 L23 28 Z" fill="${hero.outfit}" stroke="#0f172a" stroke-width="1.3"/>
+          <circle cx="16" cy="14.5" r="8.2" fill="#fde68a" stroke="#0f172a" stroke-width="1.4"/>
+          ${hairTop}
+          ${eyes}
+          <ellipse cx="10.2" cy="16.8" rx="1.6" ry="1" fill="#fb7185" opacity="0.65"/>
+          <ellipse cx="21.8" cy="16.8" rx="1.6" ry="1" fill="#fb7185" opacity="0.65"/>
+          <path d="M14.2 17.8 Q16 19.4 17.8 17.8" stroke="#9f1239" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          ${extra}
+        </svg>`;
+      }
+
+      function showToast(msg) {
+        const el = document.getElementById("combatToast");
+        el.textContent = msg;
+      }
+
+      function formatRankLabel() {
+        const tier = TIER_NAMES[rankState.tierIdx] || TIER_NAMES[0];
+        const sub = ROMAN[rankState.subIdx] || "IV";
+        return `${tier} • ${sub} ★${rankState.stars}`;
+      }
+
+      function updateHUD() {
+        const hero = getCurrentHero();
+        document.getElementById("activeHeroAvatar").innerHTML = createChibiSvg(hero, 28);
+        document.getElementById("activeHeroName").textContent = `${hero.id}. ${hero.name}`;
+        document.getElementById("activeHeroRole").textContent = `${hero.role} • Chibi 3D`;
+        document.getElementById("rankHud").textContent = `Hạng: ${formatRankLabel()}`;
+
+        const ddHud = document.getElementById("darkDragonHud");
+        if (dragonState.darkBuffActive) {
+          ddHud.classList.add("active");
+          ddHud.textContent = "🔥 RỒNG HẮC ÁM (<20% HP KẾT LIỄU)";
+        } else {
+          ddHud.classList.remove("active");
+          ddHud.textContent = `🐉 Rồng Nguyên Tố: ${dragonState.slainCount}/3`;
+        }
+
+        const pct = Math.max(0, Math.min(100, (enemy.hp / enemy.maxHp) * 100));
+        const fill = document.getElementById("targetHpFill");
+        fill.style.width = `${pct}%`;
+        if (dragonState.darkBuffActive && pct <= 25) {
+          fill.classList.add("execute-zone");
+        } else {
+          fill.classList.remove("execute-zone");
+        }
+        document.getElementById("targetHpText").textContent = `${Math.max(0, Math.ceil(enemy.hp))}/${enemy.maxHp}`;
+
+        updateSkillButton("btnS1", "cdS1", player.cdS1);
+        updateSkillButton("btnS2", "cdS2", player.cdS2);
+        updateSkillButton("btnUlti", "cdUlti", player.cdUlti);
+      }
+
+      function updateSkillButton(btnId, cdId, cdVal) {
+        const btn = document.getElementById(btnId);
+        const tag = document.getElementById(cdId);
+        if (cdVal > 0.05) {
+          btn.classList.add("cd");
+          tag.textContent = `${cdVal.toFixed(1)}s`;
+        } else {
+          btn.classList.remove("cd");
+          tag.textContent = "Sẵn";
+        }
+      }
+
+      function renderHeroStrip() {
+        const container = document.getElementById("heroScrollList");
+        container.innerHTML = "";
+        HEROES.forEach((hero) => {
+          const btn = document.createElement("button");
+          btn.className = "hero-card-btn" + (hero.id === selectedHeroId ? " selected" : "");
+          btn.innerHTML = `<span class="mini-chibi">${createChibiSvg(hero, 20)}</span><span>${hero.id}. ${hero.name}</span>`;
+          btn.addEventListener("click", () => {
+            selectedHeroId = hero.id;
+            localStorage.setItem(STORAGE_KEYS.hero, String(selectedHeroId));
+            player.emote = "★";
+            player.emoteTimer = 0.85;
+            renderHeroStrip();
+            updateHUD();
+            showToast(`Đã chọn Chibi 3D ${hero.name} (${hero.role})`);
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function renderDragonModal() {
+        const grid = document.getElementById("dragonGrid");
+        grid.innerHTML = "";
+        ELEMENT_DRAGONS.forEach((d) => {
+          const count = dragonState.slainElements.filter((k) => k === d.key).length;
+          const div = document.createElement("div");
+          div.className = "dragon-tile" + (count > 0 ? " slain" : "");
+          div.innerHTML = `<strong>${d.name} ${count > 0 ? `(x${count})` : ""}</strong><p>${d.buff}</p>`;
+          grid.appendChild(div);
+        });
+
+        const toggleBtn = document.getElementById("btnToggleDarkBuff");
+        toggleBtn.textContent = dragonState.darkBuffActive ? "Đang BẬT Bùa (Tắt)" : "Đang TẮT Bùa (Bật)";
+      }
+
+      function slayRandomElementalDragon() {
+        const pick = ELEMENT_DRAGONS[Math.floor(Math.random() * ELEMENT_DRAGONS.length)];
+        dragonState.slainCount += 1;
+        dragonState.slainElements.push(pick.key);
+
+        if (dragonState.slainCount >= 3) {
+          dragonState.darkBuffActive = true;
+          showToast("🔥 Đã hạ 3 Rồng Nguyên Tố — Bùa Rồng Hắc Ám kích hoạt (<20% HP kết liễu)!");
+        } else {
+          showToast(`🐉 Hạ ${pick.name} (${dragonState.slainCount}/3 tiến tới Rồng Hắc Ám)`);
+        }
+
+        saveJSON(STORAGE_KEYS.dragon, dragonState);
+        renderDragonModal();
+        updateHUD();
+      }
+
+      function toggleDarkDragonBuff() {
+        dragonState.darkBuffActive = !dragonState.darkBuffActive;
+        saveJSON(STORAGE_KEYS.dragon, dragonState);
+        renderDragonModal();
+        updateHUD();
+        showToast(
+          dragonState.darkBuffActive
+            ? "🔥 Bùa Rồng Hắc Ám ĐÃ BẬT: Đòn đánh/kỹ năng dưới 20% HP sẽ kết liễu!"
+            : "Bùa Rồng Hắc Ám ĐÃ TẮT"
+        );
+      }
+
+      function resetDragonCycle() {
+        dragonState = { slainCount: 0, slainElements: [], darkBuffActive: false };
+        saveJSON(STORAGE_KEYS.dragon, dragonState);
+        renderDragonModal();
+        updateHUD();
+        showToast("Đã đặt lại chu kỳ 5 Rồng Nguyên Tố");
+      }
+
+      function renderRankModal() {
+        const list = document.getElementById("rankList");
+        list.innerHTML = "";
+        TIER_NAMES.forEach((tierName, idx) => {
+          const div = document.createElement("div");
+          const isCurrent = idx === rankState.tierIdx;
+          div.className = "rank-item" + (isCurrent ? " current" : "");
+          const subText = isCurrent ? `${ROMAN[rankState.subIdx]} • ★${rankState.stars}/5` : "4 bậc nhỏ • 5 sao/bậc";
+          div.innerHTML = `<strong>${idx + 1}. ${tierName}</strong><span>${subText}</span>`;
+          list.appendChild(div);
+        });
+      }
+
+      function adjustStar(delta) {
+        if (delta > 0) {
+          rankState.stars += 1;
+          if (rankState.stars >= 5) {
+            rankState.stars = 0;
+            rankState.subIdx += 1;
+            if (rankState.subIdx >= 4) {
+              rankState.subIdx = 0;
+              if (rankState.tierIdx < TIER_NAMES.length - 1) {
+                rankState.tierIdx += 1;
+              } else {
+                rankState.subIdx = 3;
+                rankState.stars = 5;
+              }
+            }
+          }
+        } else {
+          if (rankState.stars > 0) {
+            rankState.stars -= 1;
+          } else if (rankState.subIdx > 0) {
+            rankState.subIdx -= 1;
+            rankState.stars = 4;
+          } else if (rankState.tierIdx > 0) {
+            rankState.tierIdx -= 1;
+            rankState.subIdx = 3;
+            rankState.stars = 4;
+          }
+        }
+        saveJSON(STORAGE_KEYS.rank, rankState);
+        renderRankModal();
+        updateHUD();
+      }
+
+      function resetRank() {
+        rankState = { tierIdx: 0, subIdx: 0, stars: 0 };
+        saveJSON(STORAGE_KEYS.rank, rankState);
+        renderRankModal();
+        updateHUD();
+      }
+
+      function findNearestMonster() {
+        let best = null;
+        let bestDist = 185;
+        jungleMonsters.forEach((m) => {
+          if (m.respawnTimer > 0) return;
+          const d = Math.hypot(m.x - player.x, m.y - player.y);
+          if (d <= bestDist) {
+            bestDist = d;
+            best = m;
+          }
+        });
+        return best;
+      }
+
+      function addFloatingText(x, y, text, color, scale = 1) {
+        floatingTexts.push({
+          x,
+          y,
+          vy: -46,
+          text,
+          color,
+          alpha: 1,
+          scale
+        });
+      }
+
+      function spawnSkillVisual(tx, ty, skillType, executed) {
+        const angle = Math.atan2(ty - player.y, tx - player.x);
+        player.facing = Math.cos(angle) >= 0 ? 1 : -1;
+
+        if (skillType === "atk") {
+          effects.push({
+            kind: "slash",
+            x: tx,
+            y: ty,
+            angle,
+            r: 22,
+            maxR: 34,
+            alpha: 1,
+            color: "#fde047"
+          });
+          for (let i = 0; i < 6; i++) {
+            const spAngle = angle + (Math.random() - 0.5) * 1.4;
+            const spd = 90 + Math.random() * 110;
+            effects.push({
+              kind: "spark",
+              x: tx,
+              y: ty,
+              vx: Math.cos(spAngle) * spd,
+              vy: Math.sin(spAngle) * spd,
+              r: 3.5,
+              alpha: 1,
+              color: "#facc15"
+            });
+          }
+        } else if (skillType === "s1") {
+          projectiles.push({
+            x: player.x,
+            y: player.y - 6,
+            tx,
+            ty,
+            speed: 780,
+            color: "#38bdf8",
+            coreColor: "#e0f2fe",
+            trail: []
+          });
+          effects.push({
+            kind: "ring",
+            x: tx,
+            y: ty,
+            r: 10,
+            maxR: 54,
+            alpha: 0.95,
+            color: "#38bdf8"
+          });
+        } else if (skillType === "s2") {
+          player.healAuraTimer = 0.75;
+          effects.push({
+            kind: "ring",
+            x: player.x,
+            y: player.y,
+            r: 12,
+            maxR: 62,
+            alpha: 0.95,
+            color: "#4ade80"
+          });
+          effects.push({
+            kind: "ring",
+            x: tx,
+            y: ty,
+            r: 10,
+            maxR: 48,
+            alpha: 0.9,
+            color: "#86efac"
+          });
+        } else if (skillType === "ulti") {
+          screenShake = 0.24;
+          effects.push({
+            kind: "ring",
+            x: tx,
+            y: ty,
+            r: 14,
+            maxR: 112,
+            alpha: 1,
+            color: "#fb7185"
+          });
+          effects.push({
+            kind: "ring",
+            x: tx,
+            y: ty,
+            r: 6,
+            maxR: 76,
+            alpha: 1,
+            color: "#fde047"
+          });
+          for (let i = 0; i < 14; i++) {
+            const a = (Math.PI * 2 * i) / 14;
+            const spd = 110 + (i % 3) * 55;
+            effects.push({
+              kind: "spark",
+              x: tx,
+              y: ty,
+              vx: Math.cos(a) * spd,
+              vy: Math.sin(a) * spd,
+              r: 4.5,
+              alpha: 1,
+              color: i % 2 === 0 ? "#fb7185" : "#facc15"
+            });
+          }
+        }
+
+        if (executed) {
+          screenShake = 0.3;
+          effects.push({
+            kind: "ring",
+            x: tx,
+            y: ty,
+            r: 18,
+            maxR: 126,
+            alpha: 1,
+            color: "#e879f9"
+          });
+          addFloatingText(tx, ty - 42, "KẾT LIỄU!", "#f5d0fe", 1.35);
+        }
+      }
+
+      function dealDamageToTarget(mult, label, emoteMark, skillType) {
+        const hero = getCurrentHero();
+        const redBonus = player.redBuffTimer > 0 ? 1.2 : 1;
+        const rawDmg = Math.round(hero.atk * mult * redBonus);
+        const nearMonster = findNearestMonster();
+
+        if (nearMonster) {
+          nearMonster.hp = Math.max(0, nearMonster.hp - rawDmg);
+          nearMonster.hitFlash = 0.16;
+          player.emote = emoteMark;
+          player.emoteTimer = 0.7;
+          spawnSkillVisual(nearMonster.x, nearMonster.y, skillType, false);
+          addFloatingText(nearMonster.x, nearMonster.y - 24, `-${rawDmg}`, "#fde047", skillType === "ulti" ? 1.2 : 1);
+
+          if (nearMonster.hp <= 0) {
+            nearMonster.respawnTimer = 6.0;
+            if (nearMonster.type === "blue_buff") {
+              player.cdrMult = 0.65;
+            } else if (nearMonster.type === "red_buff") {
+              player.redBuffTimer = 14;
+            } else if (nearMonster.type === "dragon") {
+              slayRandomElementalDragon();
+              return;
+            }
+            showToast(nearMonster.buffMsg);
+          } else {
+            showToast(`${hero.name} dùng ${label} vào ${nearMonster.name} (-${rawDmg})`);
+          }
+          updateHUD();
+          return;
+        }
+
+        if (enemy.respawnTimer > 0) {
+          showToast("Tướng địch đang hồi sinh (lại gần Bùa/Rồng/Tà Thần để đánh quái rừng)...");
+          return;
+        }
+
+        enemy.hp = Math.max(0, enemy.hp - rawDmg);
+        enemy.hitFlash = 0.16;
+        player.emote = emoteMark;
+        player.emoteTimer = 0.7;
+
+        const hpRatio = enemy.hp / enemy.maxHp;
+        const executed = dragonState.darkBuffActive && enemy.hp > 0 && hpRatio < 0.2;
+
+        if (executed) {
+          enemy.hp = 0;
+          player.emote = "⚡";
+          player.emoteTimer = 1.0;
+          spawnSkillVisual(enemy.x, enemy.y, skillType, true);
+          showToast(`⚡ RỒNG HẮC ÁM KẾT LIỄU! Chibi 3D ${hero.name} hạ ${enemy.name} khi máu < 20%!`);
+        } else {
+          spawnSkillVisual(enemy.x, enemy.y, skillType, false);
+          addFloatingText(enemy.x, enemy.y - 26, `-${rawDmg}`, skillType === "ulti" ? "#fda4af" : "#fde047", skillType === "ulti" ? 1.2 : 1);
+          showToast(`Chibi 3D ${hero.name} dùng ${label} gây ${rawDmg} sát thương`);
+        }
+
+        if (enemy.hp <= 0) {
+          enemy.respawnTimer = 3.2;
+        }
+
+        updateHUD();
+      }
+
+      function triggerAttack() {
+        dealDamageToTarget(1.0, "Đòn Đánh", "💢", "atk");
+      }
+
+      function triggerSkill1() {
+        if (player.cdS1 > 0.05) return;
+        player.cdS1 = 3.5 * player.cdrMult;
+        dealDamageToTarget(1.45, "Kỹ Năng 1", "✦", "s1");
+      }
+
+      function triggerSkill2() {
+        if (player.cdS2 > 0.05) return;
+        player.cdS2 = 5.0 * player.cdrMult;
+        player.hp = Math.min(player.maxHp, player.hp + 180);
+        addFloatingText(player.x, player.y - 34, "+180 HP", "#4ade80", 1.05);
+        dealDamageToTarget(1.25, "Kỹ Năng 2", "♥", "s2");
+      }
+
+      function triggerUlti() {
+        if (player.cdUlti > 0.05) return;
+        player.cdUlti = 8.0 * player.cdrMult;
+        dealDamageToTarget(2.2, "Tuyệt Kỹ (ULTI)", "🔥", "ulti");
+      }
+
+      function updateMinions(dt) {
+        minions.forEach((m) => {
+          if (m.side === "blue") {
+            m.progress += m.speed * dt;
+            if (m.progress > 1.12) m.progress = -0.12;
+          } else {
+            m.progress -= m.speed * dt;
+            if (m.progress < -0.12) m.progress = 1.12;
+          }
+        });
+      }
+
+      function drawMinions(now = performance.now()) {
+        minions.forEach((m, idx) => {
+          if (m.progress < 0 || m.progress > 1) return;
+          const pt = getPointAlongPolyline(LANE_PATHS[m.lane], m.progress);
+          const isBlue = m.side === "blue";
+          const dir = isBlue ? 1 : -1;
+          const hop = Math.abs(Math.sin(now * 0.011 + idx * 1.3)) * 3;
+          const kindIdx = idx % 3;
+
+          ctx.save();
+          ctx.translate(pt.x, pt.y);
+
+          ctx.beginPath();
+          ctx.ellipse(0, 8, kindIdx === 2 ? 13 : 9.5, 4, 0, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(2, 6, 23, 0.58)";
+          ctx.fill();
+
+          ctx.translate(0, -hop);
+          ctx.scale(dir, 1);
+
+          const primary = isBlue ? "#2563eb" : "#dc2626";
+          const light = isBlue ? "#93c5fd" : "#fca5a5";
+          const dark = isBlue ? "#1e3a8a" : "#7f1d1d";
+
+          if (kindIdx === 0) {
+            const bodyGrad = ctx.createLinearGradient(-7, 0, 7, 8);
+            bodyGrad.addColorStop(0, light);
+            bodyGrad.addColorStop(1, dark);
+            ctx.fillStyle = bodyGrad;
+            ctx.strokeStyle = "#09111e";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(-6.5, 0.5, 13, 7.5, 3);
+            ctx.fill();
+            ctx.stroke();
+
+            const headGrad = ctx.createRadialGradient(-2, -6, 1.2, 0, -4.5, 7.5);
+            headGrad.addColorStop(0, "#fffbeb");
+            headGrad.addColorStop(1, "#d97706");
+            ctx.fillStyle = headGrad;
+            ctx.beginPath();
+            ctx.arc(0, -4.5, 6.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = primary;
+            ctx.beginPath();
+            ctx.moveTo(-7, -6);
+            ctx.quadraticCurveTo(-2, -16, 6, -11);
+            ctx.quadraticCurveTo(2, -7, 7, -6);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = light;
+            ctx.beginPath();
+            ctx.arc(7.5, 3, 5.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = primary;
+            ctx.beginPath();
+            ctx.arc(7.5, 3, 2.3, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (kindIdx === 1) {
+            const robeGrad = ctx.createLinearGradient(0, -4, 0, 9);
+            robeGrad.addColorStop(0, primary);
+            robeGrad.addColorStop(1, dark);
+            ctx.fillStyle = robeGrad;
+            ctx.strokeStyle = "#09111e";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(-5, -2);
+            ctx.lineTo(5, -2);
+            ctx.lineTo(8, 8.5);
+            ctx.lineTo(-8, 8.5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = "#fde68a";
+            ctx.beginPath();
+            ctx.arc(1, -5.5, 6.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = primary;
+            ctx.beginPath();
+            ctx.arc(0.5, -7, 6.8, Math.PI * 0.95, Math.PI * 2.05);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.strokeStyle = "#f8fafc";
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.moveTo(4, 6);
+            ctx.lineTo(13, -7);
+            ctx.stroke();
+
+            ctx.fillStyle = "#fde047";
+            ctx.beginPath();
+            ctx.moveTo(16, -9);
+            ctx.lineTo(10, -7.5);
+            ctx.lineTo(12, -5.5);
+            ctx.closePath();
+            ctx.fill();
+          } else {
+            ctx.fillStyle = "#cbd5e1";
+            ctx.strokeStyle = "#09111e";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(-9, 1.5, 17, 6, 2.5);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.strokeStyle = "#f59e0b";
+            ctx.lineWidth = 2.4;
+            ctx.beginPath();
+            ctx.arc(8, 1.5, 6.5, -Math.PI * 0.45, Math.PI * 0.45);
+            ctx.stroke();
+
+            ctx.fillStyle = primary;
+            ctx.beginPath();
+            ctx.arc(-1, -4.5, 6.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = "#fde68a";
+            ctx.beginPath();
+            ctx.arc(0.5, -4, 4.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#475569";
+            ctx.beginPath();
+            ctx.arc(-5, 7.5, 3.2, 0, Math.PI * 2);
+            ctx.arc(5, 7.5, 3.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        });
+      }
+
+      function drawJungleMonsters(now) {
+        jungleMonsters.forEach((m, idx) => {
+          if (m.respawnTimer > 0) {
+            ctx.save();
+            ctx.fillStyle = "rgba(226, 232, 240, 0.72)";
+            ctx.font = "700 10px system-ui, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`${m.name} (${m.respawnTimer.toFixed(0)}s)`, m.x, m.y + 4);
+            ctx.restore();
+            return;
+          }
+
+          const bob = Math.sin(now * 0.006 + idx) * 2.5;
+          const isBoss = m.type === "dragon" || m.type === "overlord";
+          const isBuff = m.type === "blue_buff" || m.type === "red_buff";
+          const scale = m.type === "overlord" ? 1.35 : m.type === "dragon" ? 1.22 : isBuff ? 1.08 : 0.92;
+
+          const auraColor =
+            m.type === "blue_buff"
+              ? "#38bdf8"
+              : m.type === "red_buff"
+              ? "#f97316"
+              : m.type === "dragon"
+              ? dragonState.darkBuffActive
+                ? "#e879f9"
+                : "#facc15"
+              : m.type === "overlord"
+              ? "#c084fc"
+              : "#4ade80";
+
+          const bodyColor =
+            m.hitFlash > 0
+              ? "#ffffff"
+              : m.type === "blue_buff"
+              ? "#0284c7"
+              : m.type === "red_buff"
+              ? "#dc2626"
+              : m.type === "dragon"
+              ? "#b45309"
+              : m.type === "overlord"
+              ? "#581c87"
+              : "#3f6212";
+
+          ctx.save();
+          ctx.translate(m.x, m.y + bob);
+          ctx.scale(scale, scale);
+
+          ctx.save();
+          ctx.translate(0, 12);
+          ctx.rotate(now * 0.0018 * (idx % 2 === 0 ? 1 : -1));
+          ctx.strokeStyle = auraColor;
+          ctx.lineWidth = isBoss ? 2.6 : 2;
+          ctx.setLineDash(isBuff ? [7, 5] : [10, 6]);
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 24, 10, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          if (isBoss) {
+            ctx.fillStyle = m.type === "overlord" ? "#7e22ce" : "#d97706";
+            ctx.strokeStyle = "#09111e";
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(-10, -4);
+            ctx.lineTo(-26, -18);
+            ctx.lineTo(-18, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(10, -4);
+            ctx.lineTo(26, -18);
+            ctx.lineTo(18, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          const grad = ctx.createRadialGradient(-4, -8, 2, 0, -2, 16);
+          grad.addColorStop(0, auraColor);
+          grad.addColorStop(1, bodyColor);
+          ctx.fillStyle = grad;
+          ctx.strokeStyle = "#09111e";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, -2, 14, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = auraColor;
+          ctx.beginPath();
+          ctx.moveTo(-8, -12);
+          ctx.lineTo(-12, -22);
+          ctx.lineTo(-3, -15);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(8, -12);
+          ctx.lineTo(12, -22);
+          ctx.lineTo(3, -15);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#fef08a";
+          ctx.beginPath();
+          ctx.arc(-5, -3, 2.5, 0, Math.PI * 2);
+          ctx.arc(5, -3, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          const bw = 38;
+          ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+          ctx.fillRect(-bw / 2, -29, bw, 5);
+          ctx.fillStyle = auraColor;
+          ctx.fillRect(-bw / 2, -29, bw * Math.max(0, m.hp / m.maxHp), 5);
+
+          ctx.fillStyle = "#f8fafc";
+          ctx.font = "800 10px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(m.name, 0, 26);
+
+          ctx.restore();
+        });
+      }
+
+      function updateAndDrawCombatVisuals(dt) {
+        // Đạn / tia năng lượng kỹ năng S1
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+          const p = projectiles[i];
+          p.trail.push({ x: p.x, y: p.y });
+          if (p.trail.length > 7) p.trail.shift();
+
+          const dx = p.tx - p.x;
+          const dy = p.ty - p.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist <= p.speed * dt || dist < 6) {
+            projectiles.splice(i, 1);
+            continue;
+          }
+          p.x += (dx / dist) * p.speed * dt;
+          p.y += (dy / dist) * p.speed * dt;
+
+          ctx.save();
+          if (p.trail.length > 1) {
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            p.trail.forEach((pt, idx) => {
+              if (idx === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+          }
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = p.color;
+          ctx.fillStyle = p.coreColor;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Hiệu ứng vệt chém, vòng năng lượng & hạt sáng
+        for (let i = effects.length - 1; i >= 0; i--) {
+          const ef = effects[i];
+          if (ef.kind === "spark") {
+            ef.x += ef.vx * dt;
+            ef.y += ef.vy * dt;
+            ef.alpha -= 2.8 * dt;
+            if (ef.alpha <= 0) {
+              effects.splice(i, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, ef.alpha);
+            ctx.fillStyle = ef.color;
+            ctx.beginPath();
+            ctx.arc(ef.x, ef.y, ef.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          } else if (ef.kind === "slash") {
+            ef.r += 75 * dt;
+            ef.alpha -= 3.6 * dt;
+            if (ef.alpha <= 0) {
+              effects.splice(i, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, ef.alpha);
+            ctx.translate(ef.x, ef.y);
+            ctx.rotate(ef.angle);
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = ef.color;
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.arc(0, 0, ef.r, -0.85, 0.85);
+            ctx.stroke();
+            ctx.restore();
+          } else {
+            ef.r += (ef.maxR - ef.r) * Math.min(1, 11 * dt) + 85 * dt;
+            ef.alpha -= 2.1 * dt;
+            if (ef.alpha <= 0) {
+              effects.splice(i, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, ef.alpha);
+            ctx.shadowBlur = 14;
+            ctx.shadowColor = ef.color;
+            ctx.strokeStyle = ef.color;
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.arc(ef.x, ef.y, ef.r, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+
+        // Con số sát thương & hồi máu nổi lên
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+          const ft = floatingTexts[i];
+          ft.y += ft.vy * dt;
+          ft.alpha -= 1.45 * dt;
+          if (ft.alpha <= 0) {
+            floatingTexts.splice(i, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, ft.alpha);
+          ctx.font = `900 ${Math.round(14 * ft.scale)}px system-ui, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.lineWidth = 3.5;
+          ctx.strokeStyle = "rgba(9, 17, 30, 0.9)";
+          ctx.strokeText(ft.text, ft.x, ft.y);
+          ctx.fillStyle = ft.color;
+          ctx.fillText(ft.text, ft.x, ft.y);
+          ctx.restore();
+        }
+      }
+
+      function drawLoLMap(dt, now) {
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.save();
+        ctx.clearRect(0, 0, w, h);
+
+        if (screenShake > 0) {
+          const mag = screenShake * 18;
+          ctx.translate((Math.random() - 0.5) * mag, (Math.random() - 0.5) * mag);
+        }
+
+        const topJungle = ctx.createLinearGradient(0, 0, w, h * 0.6);
+        topJungle.addColorStop(0, "#0b2438");
+        topJungle.addColorStop(1, "#0f3736");
+        ctx.fillStyle = topJungle;
+        ctx.fillRect(0, 0, w, h);
+
+        const botJungle = ctx.createLinearGradient(0, h * 0.4, w, h);
+        botJungle.addColorStop(0, "#0f3736");
+        botJungle.addColorStop(1, "#1f182e");
+        ctx.fillStyle = botJungle;
+        ctx.beginPath();
+        ctx.moveTo(w, 0);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.save();
+        ctx.strokeStyle = "rgba(14, 165, 233, 0.34)";
+        ctx.lineWidth = 54;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(150, 50);
+        ctx.lineTo(w - 150, h - 50);
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(125, 211, 252, 0.45)";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([14, 14]);
+        ctx.beginPath();
+        ctx.moveTo(170, 66);
+        ctx.lineTo(w - 170, h - 66);
+        ctx.stroke();
+        ctx.restore();
+
+        const drawLanePath = (points, label, lx, ly) => {
+          ctx.save();
+          ctx.strokeStyle = "rgba(217, 179, 108, 0.28)";
+          ctx.lineWidth = 46;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          points.forEach(([px, py], i) => {
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          });
+          ctx.stroke();
+
+          ctx.strokeStyle = "rgba(254, 240, 138, 0.22)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([10, 12]);
+          ctx.beginPath();
+          points.forEach(([px, py], i) => {
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          });
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "rgba(253, 230, 138, 0.72)";
+          ctx.font = "800 11px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(label, lx, ly);
+          ctx.restore();
+        };
+
+        drawLanePath(LANE_PATHS.top, "ĐƯỜNG TRÊN (TOP)", 145, 285);
+        drawLanePath(LANE_PATHS.mid, "ĐƯỜNG GIỮA (MID)", w / 2 - 75, h / 2 - 26);
+        drawLanePath(LANE_PATHS.bot, "ĐƯỜNG DƯỚI (BOT)", 600, 554);
+
+        drawPit(780, 415, dragonState.darkBuffActive ? "#c026d3" : "#f59e0b", dragonState.darkBuffActive ? "HANG RỒNG HẮC ÁM" : "HANG RỒNG");
+        drawPit(420, 205, "#a855f7", "HANG TÀ THẦN");
+
+        drawNexus(145, 525, "#38bdf8", "NHÀ CHÍNH XANH");
+        drawNexus(1055, 95, "#ef4444", "NHÀ CHÍNH ĐỎ");
+
+        const blueTowers = [
+          [145, 370],
+          [145, 225],
+          [380, 418],
+          [265, 470],
+          [470, 525],
+          [750, 525]
+        ];
+        const redTowers = [
+          [470, 95],
+          [750, 95],
+          [820, 202],
+          [935, 150],
+          [1055, 385],
+          [1055, 240]
+        ];
+
+        blueTowers.forEach(([tx, ty]) => drawTower(tx, ty, "#38bdf8"));
+        redTowers.forEach(([tx, ty]) => drawTower(tx, ty, "#ef4444"));
+
+        drawJungleMonsters(now);
+        drawMinions(now);
+
+        const bob = Math.sin(now * 0.008) * 2.5;
+
+        if (enemy.respawnTimer <= 0) {
+          drawChibiUnit({
+            x: enemy.x,
+            y: enemy.y + bob,
+            facing: enemy.facing,
+            hair: enemy.hitFlash > 0 ? "#ffffff" : enemy.hair,
+            outfit: "#dc2626",
+            archetype: enemy.archetype,
+            ringColor: "#fca5a5",
+            label: `${enemy.name} (Chibi 3D)`,
+            hpRatio: enemy.hp / enemy.maxHp,
+            execMark: dragonState.darkBuffActive && enemy.hp / enemy.maxHp < 0.2,
+            emote: ""
+          });
+        } else {
+          ctx.save();
+          ctx.fillStyle = "rgba(248, 113, 113, 0.85)";
+          ctx.font = "700 13px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(`Chibi 3D ${enemy.name} hồi sinh sau ${enemy.respawnTimer.toFixed(1)}s`, enemy.x, enemy.y);
+          ctx.restore();
+        }
+
+        const hero = getCurrentHero();
+        drawChibiUnit({
+          x: player.x,
+          y: player.y + bob,
+          facing: player.facing,
+          hair: hero.hair,
+          outfit: hero.outfit,
+          archetype: hero.archetype,
+          ringColor: player.redBuffTimer > 0 ? "#fb923c" : player.cdrMult < 1 ? "#38bdf8" : "#f0c76b",
+          label: `${hero.name}`,
+          hpRatio: player.hp / player.maxHp,
+          execMark: false,
+          healAura: player.healAuraTimer > 0,
+          emote: player.emoteTimer > 0 ? player.emote : ""
+        });
+
+        updateAndDrawCombatVisuals(dt);
+        ctx.restore();
+      }
+
+      function drawPit(x, y, accent, label) {
+        ctx.save();
+        ctx.fillStyle = "rgba(10, 18, 32, 0.72)";
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = "700 9px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 40);
+        ctx.restore();
+      }
+
+      function drawNexus(x, y, color, label) {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.25;
+        ctx.beginPath();
+        ctx.arc(x, y, 42, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = "#0b162a";
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, y, 24, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "700 10px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 38);
+        ctx.restore();
+      }
+
+      function drawTower(x, y, color) {
+        ctx.save();
+        ctx.fillStyle = "#0f1e36";
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawChibiUnit(u) {
+        ctx.save();
+        ctx.translate(u.x, u.y);
+
+        if (u.healAura) {
+          ctx.save();
+          ctx.strokeStyle = "#4ade80";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(0, -4, 24, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.beginPath();
+        ctx.ellipse(0, 19.5, 23, 8.5, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(2, 6, 23, 0.62)";
+        ctx.fill();
+        ctx.strokeStyle = u.execMark ? "#e879f9" : u.ringColor;
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        const bodyGrad = ctx.createLinearGradient(-10, 4, 10, 18);
+        bodyGrad.addColorStop(0, u.outfit);
+        bodyGrad.addColorStop(1, "#09111e");
+        ctx.fillStyle = bodyGrad;
+        ctx.strokeStyle = "#09111e";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(-10, 4, 20, 14, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        const headGrad = ctx.createRadialGradient(-4.5, -13, 2, 0, -8, 16);
+        headGrad.addColorStop(0, "#fffbeb");
+        headGrad.addColorStop(0.68, "#fde68a");
+        headGrad.addColorStop(1, "#d97706");
+        ctx.beginPath();
+        ctx.arc(0, -8, 15, 0, Math.PI * 2);
+        ctx.fillStyle = headGrad;
+        ctx.fill();
+        ctx.stroke();
+
+        const look = u.facing >= 0 ? 3 : -3;
+
+        const hairGrad = ctx.createLinearGradient(-15, -24, 15, 0);
+        hairGrad.addColorStop(0, u.hair);
+        hairGrad.addColorStop(1, "#09111e");
+
+        if (u.archetype !== "bald") {
+          ctx.fillStyle = hairGrad;
+          ctx.beginPath();
+          ctx.arc(0, -10, 15.2, Math.PI * 0.92, Math.PI * 2.08);
+          ctx.fill();
+        }
+
+        if (u.archetype === "spiky") {
+          ctx.fillStyle = hairGrad;
+          ctx.beginPath();
+          ctx.moveTo(-13, -15);
+          ctx.lineTo(-17, -26);
+          ctx.lineTo(-5, -20);
+          ctx.lineTo(0, -29);
+          ctx.lineTo(6, -20);
+          ctx.lineTo(17, -26);
+          ctx.lineTo(13, -15);
+          ctx.closePath();
+          ctx.fill();
+        } else if (u.archetype === "ribbon") {
+          ctx.fillStyle = "#f43f5e";
+          ctx.beginPath();
+          ctx.arc(0, -24, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (u.archetype === "strawhat") {
+          const hatGrad = ctx.createLinearGradient(-20, -22, 20, -12);
+          hatGrad.addColorStop(0, "#fef08a");
+          hatGrad.addColorStop(1, "#ca8a04");
+          ctx.fillStyle = hatGrad;
+          ctx.strokeStyle = "#854d0e";
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.ellipse(0, -17, 23, 5.5, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, -18, 12, Math.PI, 0);
+          ctx.fill();
+          ctx.stroke();
+        } else if (u.archetype === "horns") {
+          ctx.fillStyle = "#e11d48";
+          ctx.beginPath();
+          ctx.moveTo(-11, -18);
+          ctx.lineTo(-16, -28);
+          ctx.lineTo(-5, -21);
+          ctx.closePath();
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(11, -18);
+          ctx.lineTo(16, -28);
+          ctx.lineTo(5, -21);
+          ctx.closePath();
+          ctx.fill();
+        } else if (u.archetype === "twin") {
+          ctx.fillStyle = hairGrad;
+          ctx.beginPath();
+          ctx.arc(-14, -12, 5.5, 0, Math.PI * 2);
+          ctx.arc(14, -12, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (u.archetype === "headband" || u.archetype === "bandana") {
+          ctx.fillStyle = u.archetype === "bandana" ? "#166534" : "#1e293b";
+          ctx.fillRect(-14.5, -14, 29, 4);
+        } else if (u.archetype === "bamboo") {
+          ctx.fillStyle = "#f472b6";
+          ctx.strokeStyle = "#9d174d";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(-7, -3.5, 14, 4.5, 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        if (u.archetype === "blindfold") {
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(-13, -10, 26, 5);
+        } else {
+          ctx.fillStyle = "#0f172a";
+          ctx.beginPath();
+          ctx.arc(-4.5 + look * 0.4, -7, 2.7, 0, Math.PI * 2);
+          ctx.arc(6.5 + look * 0.4, -7, 2.7, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(-5.3 + look * 0.4, -8, 1.1, 0, Math.PI * 2);
+          ctx.arc(5.7 + look * 0.4, -8, 1.1, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (u.archetype === "glasses") {
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(-8.5 + look * 0.4, -10, 7.5, 5.5);
+            ctx.strokeRect(2.5 + look * 0.4, -10, 7.5, 5.5);
+          }
+        }
+
+        ctx.fillStyle = "rgba(251, 113, 133, 0.72)";
+        ctx.beginPath();
+        ctx.ellipse(-8.5 + look * 0.3, -3.2, 2.8, 1.6, 0, 0, Math.PI * 2);
+        ctx.ellipse(9.5 + look * 0.3, -3.2, 2.8, 1.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (u.archetype !== "bamboo") {
+          ctx.strokeStyle = "#9f1239";
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.arc(1 + look * 0.3, -4.5, 3.2, 0.15 * Math.PI, 0.85 * Math.PI);
+          ctx.stroke();
+        }
+
+        const bw = 56;
+        const bh = 6;
+        ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+        ctx.fillRect(-bw / 2, -41, bw, bh);
+        ctx.fillStyle = u.execMark ? "#e879f9" : u.ringColor;
+        ctx.fillRect(-bw / 2, -41, bw * Math.max(0, Math.min(1, u.hpRatio)), bh);
+
+        if (u.emote) {
+          ctx.fillStyle = "#fef08a";
+          ctx.font = "900 14px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(u.emote, 0, -47);
+        }
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "700 12px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(u.label, 0, 35);
+        ctx.restore();
+      }
+
+      let lastTime = performance.now();
+      function loop(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        const hero = getCurrentHero();
+        const step = hero.spd * 58 * dt;
+        let dx = 0;
+        let dy = 0;
+        if (moveDirs.left) dx -= 1;
+        if (moveDirs.right) dx += 1;
+        if (moveDirs.up) dy -= 1;
+        if (moveDirs.down) dy += 1;
+
+        if (dx !== 0 || dy !== 0) {
+          if (dx !== 0) player.facing = dx > 0 ? 1 : -1;
+          const len = Math.hypot(dx, dy);
+          player.x = Math.max(44, Math.min(canvas.width - 44, player.x + (dx / len) * step));
+          player.y = Math.max(68, Math.min(canvas.height - 44, player.y + (dy / len) * step));
+        }
+
+        updateMinions(dt);
+
+        jungleMonsters.forEach((m) => {
+          if (m.hitFlash > 0) m.hitFlash = Math.max(0, m.hitFlash - dt);
+          if (m.respawnTimer > 0) {
+            m.respawnTimer = Math.max(0, m.respawnTimer - dt);
+            if (m.respawnTimer === 0) {
+              m.hp = m.maxHp;
+            }
+          }
+        });
+
+        if (screenShake > 0) screenShake = Math.max(0, screenShake - dt);
+        if (player.healAuraTimer > 0) player.healAuraTimer = Math.max(0, player.healAuraTimer - dt);
+        if (player.redBuffTimer > 0) player.redBuffTimer = Math.max(0, player.redBuffTimer - dt);
+        if (player.cdS1 > 0) player.cdS1 = Math.max(0, player.cdS1 - dt);
+        if (player.cdS2 > 0) player.cdS2 = Math.max(0, player.cdS2 - dt);
+        if (player.cdUlti > 0) player.cdUlti = Math.max(0, player.cdUlti - dt);
+        if (player.emoteTimer > 0) player.emoteTimer = Math.max(0, player.emoteTimer - dt);
+        if (enemy.hitFlash > 0) enemy.hitFlash = Math.max(0, enemy.hitFlash - dt);
+
+        if (enemy.respawnTimer > 0) {
+          enemy.respawnTimer = Math.max(0, enemy.respawnTimer - dt);
+          if (enemy.respawnTimer === 0) {
+            enemy.hp = enemy.maxHp;
+            showToast(`Chibi 3D ${enemy.name} đã tái xuất trên chiến trường!`);
+          }
+        }
+
+        updateHUD();
+        drawLoLMap(dt, now);
+        requestAnimationFrame(loop);
+      }
+
+      document.querySelectorAll(".dpad-btn[data-dir]").forEach((btn) => {
+        const dir = btn.getAttribute("data-dir");
+        const setDir = (val) => {
+          moveDirs[dir] = val;
+          btn.classList.toggle("pressed", val);
+        };
+        btn.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          setDir(true);
+        });
+        ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => {
+          btn.addEventListener(ev, () => setDir(false));
+        });
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") moveDirs.up = true;
+        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") moveDirs.down = true;
+        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveDirs.left = true;
+        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveDirs.right = true;
+      });
+      window.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") moveDirs.up = false;
+        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") moveDirs.down = false;
+        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveDirs.left = false;
+        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveDirs.right = false;
+      });
+
+      document.getElementById("btnAtk").addEventListener("click", triggerAttack);
+      document.getElementById("btnS1").addEventListener("click", triggerSkill1);
+      document.getElementById("btnS2").addEventListener("click", triggerSkill2);
+      document.getElementById("btnUlti").addEventListener("click", triggerUlti);
+
+      const openModal = (id) => {
+        if (id === "dragonModal") renderDragonModal();
+        if (id === "rankModal") renderRankModal();
+        document.getElementById(id).classList.add("open");
+      };
+      const closeModal = (id) => document.getElementById(id).classList.remove("open");
+
+      document.getElementById("btnDragonModal").addEventListener("click", () => openModal("dragonModal"));
+      document.getElementById("btnRankModal").addEventListener("click", () => openModal("rankModal"));
+      document.getElementById("btnPackModal").addEventListener("click", () => openModal("packModal"));
+
+      document.querySelectorAll("[data-close]").forEach((btn) => {
+        btn.addEventListener("click", () => closeModal(btn.getAttribute("data-close")));
+      });
+      document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+        backdrop.addEventListener("click", (e) => {
+          if (e.target === backdrop) backdrop.classList.remove("open");
+        });
+      });
+
+      document.getElementById("btnSlayRandomDragon").addEventListener("click", slayRandomElementalDragon);
+      document.getElementById("btnToggleDarkBuff").addEventListener("click", toggleDarkDragonBuff);
+      document.getElementById("btnResetDragonCycle").addEventListener("click", resetDragonCycle);
+
+      document.getElementById("btnAddStar").addEventListener("click", () => adjustStar(1));
+      document.getElementById("btnSubStar").addEventListener("click", () => adjustStar(-1));
+      document.getElementById("btnResetRank").addEventListener("click", resetRank);
+
+      let deferredPrompt = null;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      document.getElementById("btnInstallApp").addEventListener("click", async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        } else {
+          showToast("Dùng 'Thêm vào Màn hình chính' trên trình duyệt để cài ứng dụng");
+        }
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+      }
+
+      renderHeroStrip();
+      updateHUD();
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
