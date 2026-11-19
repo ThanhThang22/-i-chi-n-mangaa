@@ -1,0 +1,8 @@
+{
+  "appId": "com.daichienmanga.moba",
+  "appName": "Đại Chiến Manga",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

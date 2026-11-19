@@ -1,0 +1,26 @@
+{
+  "name": "Đại Chiến Manga",
+  "short_name": "Đại Chiến Manga",
+  "id": "com.daichienmanga.moba",
+  "description": "Ứng dụng game MOBA Đại Chiến Manga 50 tướng màn hình ngang, 3 đường với trụ và nhà chính bố trí sẵn, 5 Rồng Nguyên Tố & Rồng Hắc Ám, Bảng Ngọc, Phù Hiệu, Soạn Đồ và 13 bậc Đấu Hạng.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#060911",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
