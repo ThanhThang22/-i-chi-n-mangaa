@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#070d1a" />
-  <title>Đại Chiến Manga — MOBA 5v5</title>
+  <title>Đại Chiến Manga — MOBA 5v5 Chibi</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <style>
     :root {
@@ -56,7 +56,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 8px 12px;
+      padding: 7px 12px;
       background: linear-gradient(90deg, rgba(11, 22, 42, 0.95) 0%, rgba(20, 35, 64, 0.92) 50%, rgba(11, 22, 42, 0.95) 100%);
       border-bottom: 1px solid var(--panel-border);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
@@ -66,14 +66,14 @@
     .brand-block {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       min-width: 0;
     }
 
     .brand-title {
       font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.6px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       color: var(--gold-bright);
       text-shadow: 0 0 12px rgba(240, 199, 107, 0.35);
@@ -88,7 +88,7 @@
       border-radius: 999px;
       background: rgba(15, 28, 52, 0.9);
       border: 1px solid rgba(56, 189, 248, 0.35);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #e2e8f0;
       white-space: nowrap;
@@ -131,11 +131,11 @@
       border: 1px solid rgba(240, 199, 107, 0.42);
       background: linear-gradient(180deg, rgba(30, 48, 82, 0.95), rgba(14, 24, 44, 0.95));
       color: var(--gold-bright);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      transition: transform 0.12s ease, border-color 0.12s ease;
     }
 
     .hud-btn:active {
@@ -148,15 +148,15 @@
       background: linear-gradient(180deg, rgba(14, 68, 106, 0.95), rgba(9, 36, 62, 0.95));
     }
 
-    /* Thanh chọn 50 tướng */
+    /* Thanh chọn 50 tướng Chibi */
     .hero-strip-wrap {
       position: relative;
       z-index: 15;
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px;
-      background: rgba(7, 15, 29, 0.86);
+      padding: 5px 12px;
+      background: rgba(7, 15, 29, 0.88);
       border-bottom: 1px solid rgba(148, 163, 184, 0.16);
       flex-shrink: 0;
     }
@@ -165,20 +165,35 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 10px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(240, 199, 107, 0.18), rgba(56, 189, 248, 0.12));
+      padding: 4px 10px 4px 6px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, rgba(240, 199, 107, 0.2), rgba(56, 189, 248, 0.14));
       border: 1px solid var(--gold);
       flex-shrink: 0;
     }
 
+    .chibi-avatar-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(9, 18, 36, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      flex-shrink: 0;
+    }
+
     .active-hero-chip strong {
+      display: block;
       font-size: 12px;
       color: var(--gold-bright);
+      line-height: 1.15;
     }
 
     .active-hero-chip span {
-      font-size: 11px;
+      display: block;
+      font-size: 10px;
       color: var(--cyan);
       font-weight: 700;
     }
@@ -196,12 +211,12 @@
     .hero-card-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
-      border-radius: 8px;
+      gap: 6px;
+      padding: 4px 9px 4px 5px;
+      border-radius: 10px;
       border: 1px solid rgba(148, 163, 184, 0.28);
-      background: rgba(15, 27, 48, 0.88);
-      color: #cbd5e1;
+      background: rgba(15, 27, 48, 0.9);
+      color: #e2e8f0;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
@@ -209,11 +224,15 @@
       transition: all 0.14s ease;
     }
 
-    .hero-card-btn .role-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--cyan);
+    .hero-card-btn .mini-chibi {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 12, 24, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.14);
     }
 
     .hero-card-btn.selected {
@@ -223,8 +242,9 @@
       box-shadow: 0 0 12px rgba(240, 199, 107, 0.55);
     }
 
-    .hero-card-btn.selected .role-dot {
-      background: #09111e;
+    .hero-card-btn.selected .mini-chibi {
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(9, 17, 30, 0.35);
     }
 
     /* Khu vực bản đồ chiến trường */
@@ -356,7 +376,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 800;
       color: var(--gold);
     }
@@ -614,7 +634,7 @@
 
     @media (max-width: 680px) {
       .brand-title {
-        font-size: 12px;
+        font-size: 11px;
       }
       .dpad-cluster {
         grid-template-columns: repeat(3, 42px);
@@ -647,7 +667,7 @@
     <!-- HUD trên cùng kiểu Liên Quân -->
     <header class="hud-top">
       <div class="brand-block">
-        <div class="brand-title">⚔️ ĐẠI CHIẾN MANGA</div>
+        <div class="brand-title">⚔️ ĐẠI CHIẾN MANGA CHIBI</div>
         <div class="match-pill" id="rankHud">Hạng: Đồng • IV ★0</div>
         <div class="dark-dragon-badge" id="darkDragonHud">🐉 Rồng Nguyên Tố: 0/3</div>
       </div>
@@ -660,19 +680,22 @@
       </div>
     </header>
 
-    <!-- Thanh chọn nhanh 50 tướng -->
+    <!-- Thanh chọn 50 tướng Chibi -->
     <section class="hero-strip-wrap">
       <div class="active-hero-chip">
-        <strong id="activeHeroName">1. Akame</strong>
-        <span id="activeHeroRole">Sát Thủ</span>
+        <div class="chibi-avatar-box" id="activeHeroAvatar"></div>
+        <div>
+          <strong id="activeHeroName">1. Akame</strong>
+          <span id="activeHeroRole">Sát Thủ • Chibi</span>
+        </div>
       </div>
       <div class="hero-scroll" id="heroScrollList"></div>
     </section>
 
-    <!-- Bản đồ 3 đường & điều khiển MOBA -->
+    <!-- Bản đồ 3 đường kiểu LMHT & điều khiển MOBA -->
     <main class="arena-stage">
       <div class="target-hud">
-        <span class="t-name" id="targetName">🎯 Địch: Goku</span>
+        <span class="t-name" id="targetName">🎯 Địch: Goku (Chibi)</span>
         <div class="hp-bar-track">
           <div class="hp-bar-fill" id="targetHpFill"></div>
         </div>
@@ -688,7 +711,7 @@
           <button class="dpad-btn" data-dir="up" aria-label="Lên">▲</button>
           <div></div>
           <button class="dpad-btn" data-dir="left" aria-label="Trái">◀</button>
-          <div class="dpad-center">3 ĐƯỜNG</div>
+          <div class="dpad-center">LMHT</div>
           <button class="dpad-btn" data-dir="right" aria-label="Phải">▶</button>
           <div></div>
           <button class="dpad-btn" data-dir="down" aria-label="Xuống">▼</button>
@@ -699,744 +722,4 @@
         <div class="skill-cluster" aria-label="Kỹ năng chiến đấu">
           <button class="skill-btn btn-s2" id="btnS2">
             <span>S2</span>
-            <span class="cd-tag" id="cdS2">Sẵn</span>
-          </button>
-          <button class="skill-btn btn-ulti" id="btnUlti">
-            <span>ULTI</span>
-            <span class="cd-tag" id="cdUlti">Sẵn</span>
-          </button>
-          <button class="skill-btn btn-s1" id="btnS1">
-            <span>S1</span>
-            <span class="cd-tag" id="cdS1">Sẵn</span>
-          </button>
-          <button class="skill-btn btn-atk" id="btnAtk">
-            <span>ĐÁNH</span>
-            <span class="cd-tag">ATK</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="combat-toast" id="combatToast">Sẵn sàng giao tranh 5v5 • Rồng Hắc Ám kết liễu mục tiêu &lt; 20% HP</div>
-    </main>
-  </div>
-
-  <!-- Modal Rồng & Bùa Rồng Hắc Ám -->
-  <div class="modal-backdrop" id="dragonModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2>🐉 5 Rồng Nguyên Tố &amp; Bùa Rồng Hắc Ám</h2>
-        <button class="close-modal-btn" data-close="dragonModal">Đóng</button>
-      </div>
-
-      <div class="toggle-row">
-        <div>
-          <strong style="color:#f5d0fe; font-size:13px;">Bùa Rồng Hắc Ám (Kết liễu &lt; 20% HP)</strong>
-          <div style="font-size:11px; color:#cbd5e1; margin-top:2px;">
-            Khi bật, đòn đánh hoặc kỹ năng gây sát thương tướng đích dưới 20% máu (hoặc kéo máu xuống dưới 20%) sẽ kết liễu ngay lập tức.
-          </div>
-        </div>
-        <button class="action-primary" id="btnToggleDarkBuff">Bật / Tắt Bùa</button>
-      </div>
-
-      <div class="dragon-grid" id="dragonGrid"></div>
-
-      <div style="display:flex; flex-wrap:wrap; gap:8px;">
-        <button class="action-primary" id="btnSlayRandomDragon">Hạ Rồng Nguyên Tố Ngẫu Nhiên</button>
-        <button class="hud-btn" id="btnResetDragonCycle">Đặt Lại Chu Kỳ Rồng</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 13 Bậc Hạng -->
-  <div class="modal-backdrop" id="rankModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2>🏆 13 Bậc Đấu Hạng</h2>
-        <button class="close-modal-btn" data-close="rankModal">Đóng</button>
-      </div>
-
-      <p style="margin:0 0 12px; font-size:12px; color:#cbd5e1;">
-        Mỗi bậc lớn gồm 4 bậc nhỏ (Bậc 4 → Bậc 1), mỗi bậc nhỏ cần <strong>5 Sao</strong>. Dữ liệu lưu tự động qua <code>localStorage</code>.
-      </p>
-
-      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
-        <button class="action-primary" id="btnAddStar">+1 Sao</button>
-        <button class="hud-btn" id="btnSubStar">-1 Sao</button>
-        <button class="hud-btn" id="btnResetRank">Về Bậc 1 (Đồng IV ★0)</button>
-      </div>
-
-      <div class="rank-list" id="rankList"></div>
-    </div>
-  </div>
-
-  <!-- Modal Đóng Gói App Capacitor -->
-  <div class="modal-backdrop" id="packModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2>📦 Đóng Gói Ứng Dụng Android / iOS (Capacitor)</h2>
-        <button class="close-modal-btn" data-close="packModal">Đóng</button>
-      </div>
-      <p style="margin:0 0 10px; font-size:12px; color:#cbd5e1;">
-        App ID: <code>com.daichienmanga.moba</code> • Thư mục nguồn web: <code>www/</code>
-      </p>
-      <pre class="code-box">npm init -y
-npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/ios
-npx cap init "Đại Chiến Manga" "com.daichienmanga.moba" --web-dir=www
-npx cap add android
-npx cap add ios
-npx cap sync</pre>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      const STORAGE_KEYS = {
-        hero: "dcm_selected_hero_v1",
-        rank: "dcm_rank_state_v1",
-        dragon: "dcm_dragon_state_v1"
-      };
-
-      const ROLES = ["Sát Thủ", "Đấu Sĩ", "Pháp Sư", "Xạ Thủ", "Đỡ Đòn", "Trợ Thủ"];
-      const RAW_HEROES = [
-        "Akame", "Goku", "Naruto", "Luffy", "Zoro", "Sasuke", "Gojo", "Sukuna", "Levi", "Tanjiro",
-        "Nezuko", "Killua", "Gon", "Hisoka", "Ichigo", "Aizen", "Saitama", "Genos", "Tatsumaki", "Garou",
-        "Meliodas", "Ban", "Escanor", "Natsu", "Erza", "Gray", "Jotaro", "Dio", "Edward", "Roy Mustang",
-        "Light Yagami", "Lelouch", "Mob", "Reigen", "Chainsaw Denji", "Makima", "Power", "Asta", "Yami", "Yuno",
-        "Sung Jin-Woo", "Cha Hae-In", "Rimuru", "Anos", "Cid Kagenou", "Alucard", "Kaneki", "Tohka", "Saber", "Gilgamesh"
-      ];
-
-      const HEROES = RAW_HEROES.map((name, idx) => ({
-        id: idx + 1,
-        name,
-        role: ROLES[idx % ROLES.length],
-        atk: 115 + (idx % 7) * 14,
-        spd: 3.3 + (idx % 5) * 0.18
-      }));
-
-      const ELEMENT_DRAGONS = [
-        { key: "fire", name: "Rồng Hỏa", buff: "+12% Sát thương kỹ năng & đòn đánh" },
-        { key: "water", name: "Rồng Thủy", buff: "+15% Hồi phục & kháng hiệu ứng" },
-        { key: "wind", name: "Rồng Phong", buff: "+14% Tốc chạy & tốc độ ra đòn" },
-        { key: "earth", name: "Rồng Thổ", buff: "+16% Giáp & Kháng phép" },
-        { key: "thunder", name: "Rồng Lôi", buff: "+15% Sát thương chuẩn lên mục tiêu" }
-      ];
-
-      const TIER_NAMES = [
-        "Đồng",
-        "Bạc",
-        "Vàng",
-        "Bạch Kim",
-        "Kim Cương",
-        "Tinh Anh",
-        "Cao Thủ",
-        "Đại Cao Thủ",
-        "Thách Đấu",
-        "Chiến Tướng",
-        "Huyền Thoại",
-        "Thần Thoại",
-        "Vô Song Manga"
-      ];
-
-      const ROMAN = ["IV", "III", "II", "I"];
-
-      function loadJSON(key, fallback) {
-        try {
-          const raw = localStorage.getItem(key);
-          return raw ? { ...fallback, ...JSON.parse(raw) } : { ...fallback };
-        } catch (_) {
-          return { ...fallback };
-        }
-      }
-
-      function saveJSON(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-        } catch (_) {}
-      }
-
-      let selectedHeroId = Number(localStorage.getItem(STORAGE_KEYS.hero)) || 1;
-      if (!HEROES.some((h) => h.id === selectedHeroId)) selectedHeroId = 1;
-
-      let rankState = loadJSON(STORAGE_KEYS.rank, {
-        tierIdx: 0, // 0..12 (13 bậc)
-        subIdx: 0,  // 0..3 (Bậc 4 -> Bậc 1)
-        stars: 0    // 0..4 (đủ 5 sao thăng bậc nhỏ)
-      });
-
-      let dragonState = loadJSON(STORAGE_KEYS.dragon, {
-        slainCount: 0,
-        slainElements: [],
-        darkBuffActive: false
-      });
-
-      const canvas = document.getElementById("mobaCanvas");
-      const ctx = canvas.getContext("2d");
-
-      const player = {
-        x: 220,
-        y: 310,
-        radius: 20,
-        hp: 1200,
-        maxHp: 1200,
-        cdS1: 0,
-        cdS2: 0,
-        cdUlti: 0,
-        flashTimer: 0
-      };
-
-      const enemy = {
-        name: "Goku (Địch)",
-        x: 920,
-        y: 310,
-        radius: 21,
-        hp: 1000,
-        maxHp: 1000,
-        hitFlash: 0,
-        respawnTimer: 0
-      };
-
-      const moveDirs = { up: false, down: false, left: false, right: false };
-      const effects = [];
-
-      function getCurrentHero() {
-        return HEROES.find((h) => h.id === selectedHeroId) || HEROES[0];
-      }
-
-      function showToast(msg) {
-        const el = document.getElementById("combatToast");
-        el.textContent = msg;
-      }
-
-      function formatRankLabel() {
-        const tier = TIER_NAMES[rankState.tierIdx] || TIER_NAMES[0];
-        const sub = ROMAN[rankState.subIdx] || "IV";
-        return `${tier} • ${sub} ★${rankState.stars}`;
-      }
-
-      function updateHUD() {
-        const hero = getCurrentHero();
-        document.getElementById("activeHeroName").textContent = `${hero.id}. ${hero.name}`;
-        document.getElementById("activeHeroRole").textContent = hero.role;
-        document.getElementById("rankHud").textContent = `Hạng: ${formatRankLabel()}`;
-
-        const ddHud = document.getElementById("darkDragonHud");
-        if (dragonState.darkBuffActive) {
-          ddHud.classList.add("active");
-          ddHud.textContent = "🔥 RỒNG HẮC ÁM (<20% HP KẾT LIỄU)";
-        } else {
-          ddHud.classList.remove("active");
-          ddHud.textContent = `🐉 Rồng Nguyên Tố: ${dragonState.slainCount}/3`;
-        }
-
-        const pct = Math.max(0, Math.min(100, (enemy.hp / enemy.maxHp) * 100));
-        const fill = document.getElementById("targetHpFill");
-        fill.style.width = `${pct}%`;
-        if (dragonState.darkBuffActive && pct <= 25) {
-          fill.classList.add("execute-zone");
-        } else {
-          fill.classList.remove("execute-zone");
-        }
-        document.getElementById("targetHpText").textContent = `${Math.max(0, Math.ceil(enemy.hp))}/${enemy.maxHp}`;
-
-        updateSkillButton("btnS1", "cdS1", player.cdS1);
-        updateSkillButton("btnS2", "cdS2", player.cdS2);
-        updateSkillButton("btnUlti", "cdUlti", player.cdUlti);
-      }
-
-      function updateSkillButton(btnId, cdId, cdVal) {
-        const btn = document.getElementById(btnId);
-        const tag = document.getElementById(cdId);
-        if (cdVal > 0.05) {
-          btn.classList.add("cd");
-          tag.textContent = `${cdVal.toFixed(1)}s`;
-        } else {
-          btn.classList.remove("cd");
-          tag.textContent = "Sẵn";
-        }
-      }
-
-      function renderHeroStrip() {
-        const container = document.getElementById("heroScrollList");
-        container.innerHTML = "";
-        HEROES.forEach((hero) => {
-          const btn = document.createElement("button");
-          btn.className = "hero-card-btn" + (hero.id === selectedHeroId ? " selected" : "");
-          btn.innerHTML = `<span class="role-dot"></span><span>${hero.id}. ${hero.name}</span>`;
-          btn.addEventListener("click", () => {
-            selectedHeroId = hero.id;
-            localStorage.setItem(STORAGE_KEYS.hero, String(selectedHeroId));
-            renderHeroStrip();
-            updateHUD();
-            showToast(`Đã chọn ${hero.name} (${hero.role})`);
-          });
-          container.appendChild(btn);
-        });
-      }
-
-      function renderDragonModal() {
-        const grid = document.getElementById("dragonGrid");
-        grid.innerHTML = "";
-        ELEMENT_DRAGONS.forEach((d) => {
-          const count = dragonState.slainElements.filter((k) => k === d.key).length;
-          const div = document.createElement("div");
-          div.className = "dragon-tile" + (count > 0 ? " slain" : "");
-          div.innerHTML = `<strong>${d.name} ${count > 0 ? `(x${count})` : ""}</strong><p>${d.buff}</p>`;
-          grid.appendChild(div);
-        });
-
-        const toggleBtn = document.getElementById("btnToggleDarkBuff");
-        toggleBtn.textContent = dragonState.darkBuffActive ? "Đang BẬT Bùa (Tắt)" : "Đang TẮT Bùa (Bật)";
-      }
-
-      function slayRandomElementalDragon() {
-        const pick = ELEMENT_DRAGONS[Math.floor(Math.random() * ELEMENT_DRAGONS.length)];
-        dragonState.slainCount += 1;
-        dragonState.slainElements.push(pick.key);
-
-        if (dragonState.slainCount >= 3) {
-          dragonState.darkBuffActive = true;
-          showToast("🔥 Đã hạ 3 Rồng Nguyên Tố — Bùa Rồng Hắc Ám kích hoạt (<20% HP kết liễu)!");
-        } else {
-          showToast(`🐉 Hạ ${pick.name} (${dragonState.slainCount}/3 tiến tới Rồng Hắc Ám)`);
-        }
-
-        saveJSON(STORAGE_KEYS.dragon, dragonState);
-        renderDragonModal();
-        updateHUD();
-      }
-
-      function toggleDarkDragonBuff() {
-        dragonState.darkBuffActive = !dragonState.darkBuffActive;
-        saveJSON(STORAGE_KEYS.dragon, dragonState);
-        renderDragonModal();
-        updateHUD();
-        showToast(
-          dragonState.darkBuffActive
-            ? "🔥 Bùa Rồng Hắc Ám ĐÃ BẬT: Đòn đánh/kỹ năng dưới 20% HP sẽ kết liễu!"
-            : "Bùa Rồng Hắc Ám ĐÃ TẮT"
-        );
-      }
-
-      function resetDragonCycle() {
-        dragonState = { slainCount: 0, slainElements: [], darkBuffActive: false };
-        saveJSON(STORAGE_KEYS.dragon, dragonState);
-        renderDragonModal();
-        updateHUD();
-        showToast("Đã đặt lại chu kỳ 5 Rồng Nguyên Tố");
-      }
-
-      function renderRankModal() {
-        const list = document.getElementById("rankList");
-        list.innerHTML = "";
-        TIER_NAMES.forEach((tierName, idx) => {
-          const div = document.createElement("div");
-          const isCurrent = idx === rankState.tierIdx;
-          div.className = "rank-item" + (isCurrent ? " current" : "");
-          const subText = isCurrent ? `${ROMAN[rankState.subIdx]} • ★${rankState.stars}/5` : "4 bậc nhỏ • 5 sao/bậc";
-          div.innerHTML = `<strong>${idx + 1}. ${tierName}</strong><span>${subText}</span>`;
-          list.appendChild(div);
-        });
-      }
-
-      function adjustStar(delta) {
-        if (delta > 0) {
-          rankState.stars += 1;
-          if (rankState.stars >= 5) {
-            rankState.stars = 0;
-            rankState.subIdx += 1;
-            if (rankState.subIdx >= 4) {
-              rankState.subIdx = 0;
-              if (rankState.tierIdx < TIER_NAMES.length - 1) {
-                rankState.tierIdx += 1;
-              } else {
-                rankState.subIdx = 3;
-                rankState.stars = 5;
-              }
-            }
-          }
-        } else {
-          if (rankState.stars > 0) {
-            rankState.stars -= 1;
-          } else if (rankState.subIdx > 0) {
-            rankState.subIdx -= 1;
-            rankState.stars = 4;
-          } else if (rankState.tierIdx > 0) {
-            rankState.tierIdx -= 1;
-            rankState.subIdx = 3;
-            rankState.stars = 4;
-          }
-        }
-        saveJSON(STORAGE_KEYS.rank, rankState);
-        renderRankModal();
-        updateHUD();
-      }
-
-      function resetRank() {
-        rankState = { tierIdx: 0, subIdx: 0, stars: 0 };
-        saveJSON(STORAGE_KEYS.rank, rankState);
-        renderRankModal();
-        updateHUD();
-      }
-
-      function dealDamageToEnemy(mult, label) {
-        if (enemy.respawnTimer > 0) {
-          showToast("Tướng địch đang hồi sinh...");
-          return;
-        }
-        const hero = getCurrentHero();
-        const rawDmg = Math.round(hero.atk * mult);
-        enemy.hp = Math.max(0, enemy.hp - rawDmg);
-        enemy.hitFlash = 0.16;
-
-        const hpRatio = enemy.hp / enemy.maxHp;
-        const executed = dragonState.darkBuffActive && enemy.hp > 0 && hpRatio < 0.2;
-
-        if (executed) {
-          enemy.hp = 0;
-          effects.push({ x: enemy.x, y: enemy.y, r: 16, maxR: 82, alpha: 1, color: "#e879f9" });
-          showToast(`⚡ RỒNG HẮC ÁM KẾT LIỄU! ${hero.name} hạ ${enemy.name} khi máu < 20%!`);
-        } else {
-          effects.push({ x: enemy.x, y: enemy.y, r: 12, maxR: 48, alpha: 0.9, color: "#facc15" });
-          showToast(`${hero.name} dùng ${label} gây ${rawDmg} sát thương`);
-        }
-
-        if (enemy.hp <= 0) {
-          enemy.respawnTimer = 3.2;
-          effects.push({ x: enemy.x, y: enemy.y, r: 20, maxR: 96, alpha: 1, color: "#ef4444" });
-        }
-
-        updateHUD();
-      }
-
-      function triggerAttack() {
-        dealDamageToEnemy(1.0, "Đòn Đánh");
-      }
-
-      function triggerSkill1() {
-        if (player.cdS1 > 0.05) return;
-        player.cdS1 = 3.5;
-        dealDamageToEnemy(1.45, "Kỹ Năng 1");
-      }
-
-      function triggerSkill2() {
-        if (player.cdS2 > 0.05) return;
-        player.cdS2 = 5.0;
-        player.hp = Math.min(player.maxHp, player.hp + 180);
-        effects.push({ x: player.x, y: player.y, r: 14, maxR: 56, alpha: 0.9, color: "#22c55e" });
-        dealDamageToEnemy(1.25, "Kỹ Năng 2");
-      }
-
-      function triggerUlti() {
-        if (player.cdUlti > 0.05) return;
-        player.cdUlti = 8.0;
-        dealDamageToEnemy(2.2, "Tuyệt Kỹ (ULTI)");
-      }
-
-      function drawArena(dt) {
-        const w = canvas.width;
-        const h = canvas.height;
-        ctx.clearRect(0, 0, w, h);
-
-        // Nền chiến trường MOBA
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-        bgGrad.addColorStop(0, "#0b2036");
-        bgGrad.addColorStop(0.5, "#112f48");
-        bgGrad.addColorStop(1, "#091a2d");
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, w, h);
-
-        // 3 đường (Đường Trên, Đường Giữa, Đường Dưới)
-        const lanesY = [135, 310, 485];
-        const laneNames = ["ĐƯỜNG TRÊN", "ĐƯỜNG GIỮA", "ĐƯỜNG DƯỚI"];
-
-        lanesY.forEach((ly, idx) => {
-          ctx.save();
-          ctx.strokeStyle = "rgba(240, 199, 107, 0.24)";
-          ctx.lineWidth = 44;
-          ctx.lineCap = "round";
-          ctx.beginPath();
-          ctx.moveTo(120, ly);
-          ctx.lineTo(w - 120, ly);
-          ctx.stroke();
-
-          ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
-          ctx.setLineDash([12, 12]);
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(140, ly);
-          ctx.lineTo(w - 140, ly);
-          ctx.stroke();
-          ctx.setLineDash([]);
-
-          ctx.fillStyle = "rgba(226, 232, 240, 0.55)";
-          ctx.font = "700 12px system-ui, sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText(laneNames[idx], w / 2, ly - 28);
-          ctx.restore();
-        });
-
-        // Nhà chính & Trụ 2 bên
-        drawNexus(82, h / 2, "#38bdf8", "NHÀ ĐỒNG MINH");
-        drawNexus(w - 82, h / 2, "#ef4444", "NHÀ ĐỊCH");
-
-        lanesY.forEach((ly) => {
-          drawTower(320, ly, "#38bdf8");
-          drawTower(w - 320, ly, "#ef4444");
-        });
-
-        // Hiệu ứng kỹ năng / kết liễu
-        for (let i = effects.length - 1; i >= 0; i--) {
-          const ef = effects[i];
-          ef.r += 240 * dt;
-          ef.alpha -= 2.2 * dt;
-          if (ef.alpha <= 0) {
-            effects.splice(i, 1);
-            continue;
-          }
-          ctx.save();
-          ctx.globalAlpha = Math.max(0, ef.alpha);
-          ctx.strokeStyle = ef.color;
-          ctx.lineWidth = 3.5;
-          ctx.beginPath();
-          ctx.arc(ef.x, ef.y, ef.r, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        // Tướng địch
-        if (enemy.respawnTimer <= 0) {
-          drawUnit(
-            enemy.x,
-            enemy.y,
-            enemy.radius,
-            enemy.hitFlash > 0 ? "#ffffff" : "#ef4444",
-            "#fca5a5",
-            enemy.name,
-            enemy.hp / enemy.maxHp,
-            dragonState.darkBuffActive && enemy.hp / enemy.maxHp < 0.2
-          );
-        } else {
-          ctx.save();
-          ctx.fillStyle = "rgba(248, 113, 113, 0.85)";
-          ctx.font = "700 13px system-ui, sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText(`Tướng địch hồi sinh sau ${enemy.respawnTimer.toFixed(1)}s`, enemy.x, enemy.y);
-          ctx.restore();
-        }
-
-        // Tướng người chơi
-        const hero = getCurrentHero();
-        drawUnit(
-          player.x,
-          player.y,
-          player.radius,
-          "#38bdf8",
-          "#f0c76b",
-          `${hero.name}`,
-          player.hp / player.maxHp,
-          false
-        );
-      }
-
-      function drawNexus(x, y, color, label) {
-        ctx.save();
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.25;
-        ctx.beginPath();
-        ctx.arc(x, y, 42, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-
-        ctx.fillStyle = "#0b162a";
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(x, y, 24, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "700 10px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(label, x, y + 38);
-        ctx.restore();
-      }
-
-      function drawTower(x, y, color) {
-        ctx.save();
-        ctx.fillStyle = "#0f1e36";
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(x, y, 13, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      function drawUnit(x, y, r, bodyColor, ringColor, label, hpRatio, execMark) {
-        ctx.save();
-        // Thanh máu trên đầu
-        const bw = 54;
-        const bh = 6;
-        ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
-        ctx.fillRect(x - bw / 2, y - r - 18, bw, bh);
-        ctx.fillStyle = execMark ? "#e879f9" : bodyColor;
-        ctx.fillRect(x - bw / 2, y - r - 18, bw * Math.max(0, Math.min(1, hpRatio)), bh);
-
-        // Vòng sáng & thân tướng
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = bodyColor;
-        ctx.fill();
-        ctx.lineWidth = 2.5;
-        ctx.strokeStyle = execMark ? "#f5d0fe" : ringColor;
-        ctx.stroke();
-
-        if (execMark) {
-          ctx.fillStyle = "#fdf4ff";
-          ctx.font = "900 10px system-ui, sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText("<20%", x, y + 3);
-        }
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "700 12px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(label, x, y + r + 15);
-        ctx.restore();
-      }
-
-      let lastTime = performance.now();
-      function loop(now) {
-        const dt = Math.min(0.05, (now - lastTime) / 1000);
-        lastTime = now;
-
-        const hero = getCurrentHero();
-        const step = hero.spd * 58 * dt;
-        let dx = 0;
-        let dy = 0;
-        if (moveDirs.left) dx -= 1;
-        if (moveDirs.right) dx += 1;
-        if (moveDirs.up) dy -= 1;
-        if (moveDirs.down) dy += 1;
-
-        if (dx !== 0 || dy !== 0) {
-          const len = Math.hypot(dx, dy);
-          player.x = Math.max(44, Math.min(canvas.width - 44, player.x + (dx / len) * step));
-          player.y = Math.max(64, Math.min(canvas.height - 44, player.y + (dy / len) * step));
-        }
-
-        if (player.cdS1 > 0) player.cdS1 = Math.max(0, player.cdS1 - dt);
-        if (player.cdS2 > 0) player.cdS2 = Math.max(0, player.cdS2 - dt);
-        if (player.cdUlti > 0) player.cdUlti = Math.max(0, player.cdUlti - dt);
-        if (enemy.hitFlash > 0) enemy.hitFlash = Math.max(0, enemy.hitFlash - dt);
-
-        if (enemy.respawnTimer > 0) {
-          enemy.respawnTimer = Math.max(0, enemy.respawnTimer - dt);
-          if (enemy.respawnTimer === 0) {
-            enemy.hp = enemy.maxHp;
-            showToast(`${enemy.name} đã tái xuất trên chiến trường!`);
-          }
-        }
-
-        updateHUD();
-        drawArena(dt);
-        requestAnimationFrame(loop);
-      }
-
-      // Gắn sự kiện D-Pad
-      document.querySelectorAll(".dpad-btn[data-dir]").forEach((btn) => {
-        const dir = btn.getAttribute("data-dir");
-        const setDir = (val) => {
-          moveDirs[dir] = val;
-          btn.classList.toggle("pressed", val);
-        };
-        btn.addEventListener("pointerdown", (e) => {
-          e.preventDefault();
-          setDir(true);
-        });
-        ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => {
-          btn.addEventListener(ev, () => setDir(false));
-        });
-      });
-
-      // Phím mũi tên trên bàn phím máy tính
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") moveDirs.up = true;
-        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") moveDirs.down = true;
-        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveDirs.left = true;
-        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveDirs.right = true;
-      });
-      window.addEventListener("keyup", (e) => {
-        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") moveDirs.up = false;
-        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") moveDirs.down = false;
-        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveDirs.left = false;
-        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveDirs.right = false;
-      });
-
-      // Gắn sự kiện nút đánh & kỹ năng
-      document.getElementById("btnAtk").addEventListener("click", triggerAttack);
-      document.getElementById("btnS1").addEventListener("click", triggerSkill1);
-      document.getElementById("btnS2").addEventListener("click", triggerSkill2);
-      document.getElementById("btnUlti").addEventListener("click", triggerUlti);
-
-      // Modal điều khiển
-      const openModal = (id) => {
-        if (id === "dragonModal") renderDragonModal();
-        if (id === "rankModal") renderRankModal();
-        document.getElementById(id).classList.add("open");
-      };
-      const closeModal = (id) => document.getElementById(id).classList.remove("open");
-
-      document.getElementById("btnDragonModal").addEventListener("click", () => openModal("dragonModal"));
-      document.getElementById("btnRankModal").addEventListener("click", () => openModal("rankModal"));
-      document.getElementById("btnPackModal").addEventListener("click", () => openModal("packModal"));
-
-      document.querySelectorAll("[data-close]").forEach((btn) => {
-        btn.addEventListener("click", () => closeModal(btn.getAttribute("data-close")));
-      });
-      document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
-        backdrop.addEventListener("click", (e) => {
-          if (e.target === backdrop) backdrop.classList.remove("open");
-        });
-      });
-
-      document.getElementById("btnSlayRandomDragon").addEventListener("click", slayRandomElementalDragon);
-      document.getElementById("btnToggleDarkBuff").addEventListener("click", toggleDarkDragonBuff);
-      document.getElementById("btnResetDragonCycle").addEventListener("click", resetDragonCycle);
-
-      document.getElementById("btnAddStar").addEventListener("click", () => adjustStar(1));
-      document.getElementById("btnSubStar").addEventListener("click", () => adjustStar(-1));
-      document.getElementById("btnResetRank").addEventListener("click", resetRank);
-
-      // PWA install prompt & Service Worker
-      let deferredPrompt = null;
-      window.addEventListener("beforeinstallprompt", (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-      });
-
-      document.getElementById("btnInstallApp").addEventListener("click", async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          await deferredPrompt.userChoice;
-          deferredPrompt = null;
-        } else {
-          showToast("Dùng 'Thêm vào Màn hình chính' trên trình duyệt để cài ứng dụng");
-        }
-      });
-
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("./sw.js").catch(() => {});
-        });
-      }
-
-      renderHeroStrip();
-      updateHUD();
-      requestAnimationFrame(loop);
-    })();
-  </script>
-</body>
-</html>
+            
